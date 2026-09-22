@@ -10,4 +10,5 @@ int gCofoInsert(GCofo *gCofo, void *item);
 int gCofoRemove(GCofo *gCofo, void *key, int (*cmp)(void *, void *));
 int gCofoQuery(GCofo *gCofo, void *key, int (*cmp)(void *, void *));
 
+
 #endif

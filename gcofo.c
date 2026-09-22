@@ -1,5 +1,4 @@
 #include "gcofo.h"
-#include <gc/gc.h>
 #include <stdlib.h>
 
 struct GCofo {
@@ -45,12 +44,14 @@ int gCofoInsert(GCofo *gCofo, void *item) {
 int gCofoRemove(GCofo *gCofo, void *key, int (*cmp)(void *, void *)) {
     if (gCofo != NULL) {
         if (gCofo->numItems > 0) {
-            int i = 0;
-            int isEqual = cmp(key, gCofo->list[i]);
+            int i;
+            int isEqual = FALSE;
 
-            while (i < gCofo->numItems && !isEqual) {
-                i++;
-                isEqual = cmp(key, gCofo->list[i]);
+            for (i = 0; i < gCofo->numItems; i++) {
+                if (cmp(key, gCofo->list[i])) {
+                    isEqual = TRUE;
+                    break;
+                }
             }
 
             if (isEqual) {
@@ -72,11 +73,13 @@ int gCofoQuery(GCofo *gCofo, void *key, int (*cmp)(void *, void *)) {
     if (gCofo != NULL) {
         if (gCofo->numItems > 0) {
             int i = 0;
-            int isEqual = cmp(key, gCofo->list[i]);
+            int isEqual = FALSE;
 
-            while (i < gCofo->numItems && !isEqual) {
-                i++;
-                isEqual = cmp(key, gCofo->list[i]);
+            for (i = 0; i < gCofo->numItems; i++) {
+                if (cmp(key, gCofo->list[i])) {
+                    isEqual = TRUE;
+                    break;
+                }
             }
 
             if (isEqual) {
