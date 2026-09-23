@@ -1,5 +1,6 @@
 #include "gcofo.h"
 #include <stdlib.h>
+#include <string.h>
 
 struct GCofo {
     void **list;
@@ -99,3 +100,29 @@ void *gCofoGetFirst(GCofo *gCofo) {
 
     return NULL;
 }
+
+int gCofoClear(GCofo *gCofo) {
+    if (gCofo != NULL) {
+        if (gCofo->numItems > 0) {
+            gCofo->numItems = 0;
+
+            return TRUE;
+        }
+    }
+
+    return FALSE;
+}
+
+int gCofoDestroy(GCofo *gCofo) {
+    if (gCofo != NULL) {
+        if (gCofo->numItems == 0) {
+            free(gCofo->list);
+            free(gCofo);
+
+            return TRUE;
+        }
+    }
+
+    return FALSE;
+}
+

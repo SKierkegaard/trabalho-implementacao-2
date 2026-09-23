@@ -11,5 +11,7 @@ void *gCofoRemove(GCofo *gCofo, void *key, int (*cmp)(void *, void *));
 void *gCofoQuery(GCofo *gCofo, void *key, int (*cmp)(void *, void *));
 void *gCofoGetNext(GCofo *gCofo);
 void *gCofoGetFirst(GCofo *gCofo);
+int gCofoClear(GCofo *gCofo);
+int gCofoDestroy(GCofo *gCofo);
 
 #endif
