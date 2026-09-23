@@ -1,4 +1,4 @@
-# Trabalho de Implementação - TAD Genérico
+# Trabalho de Implementação 2 - TAD Genérico
 
 **Instituição:** Universidade Federal do Maranhão  
 **Disciplina:** Estrutura de Dados 1  
@@ -24,8 +24,8 @@ gcc -o ./build/main main.c tad_generico.c
 
 ## Arquivos fonte
 
-- `tad_generico.h`: Contém as assinaturas das funções, definições do TAD e os protótipos de callbacks (funções de comparação, impressão e desalocação).
-- `tad_generico.c`: Contém a implementação interna das estruturas genéricas e da lógica do TAD.
+- `gcofo.h`: Contém as assinaturas das funções, definições do TAD e os protótipos de callbacks (funções de comparação, impressão e desalocação).
+- `gcofo.c`: Contém a implementação interna das estruturas genéricas e da lógica do TAD.
 - `main.c`: Programa principal contendo um menu interativo e testes para demonstrar o uso da estrutura genérica com diferentes tipos de dados.
 
 ## Execução do programa
