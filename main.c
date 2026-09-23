@@ -55,7 +55,7 @@ Album *albumCreate() {
         fgets(album->name, 30, stdin);
 
         printf("Digite a quantidade de músicas do álbum: ");
-        scanf("%s", &album->numSongs);
+        scanf("%d", &album->numSongs);
         cleanBuffer();
 
         printf("Digite a quantidade de visualizações(em milhões) do álbum: ");
@@ -66,6 +66,133 @@ Album *albumCreate() {
     }
 
     return NULL;
+}
+
+int albumRemove(GCofo *gCofo) {
+    int option;
+    int running = TRUE;
+    Album key;
+    void *removed;
+
+    while (running) {
+        key = (Album){0};
+        printf("#--------- Remover Álbum ---------#\n");
+        printf("| 1 - Por nome                    |\n");
+        printf("| 2 - Por número de músicas       |\n");
+        printf("| 3 - Por número de visualizações |\n");
+        printf("#---------------------------------#\n");
+        printf("> ");
+
+        if (scanf("%d", &option) != 1) {
+            printf("Entrada inválida.\n");
+            cleanBuffer();
+            continue;
+        }
+        cleanBuffer();
+
+
+        printf("\n");
+        switch(option) {
+            case 1:
+                printf("Digite o nome do álbum: ");
+                fgets(key.name, 30, stdin);
+                removed = gCofoRemove(gCofo, (void *) &key, queryAlbumName);
+
+                break;
+
+            case 2:
+                printf("Digite o número de músicas: ");
+                scanf("%d", &key.numSongs);
+                cleanBuffer();
+                removed = gCofoRemove(gCofo, &key, queryAlbumNumSongs);
+ 
+                break;
+
+            case 3:
+                printf("Digite o número de visualizações: ");
+                scanf("%f", &key.numPlays);
+                cleanBuffer();
+                removed = gCofoRemove(gCofo, &key, queryAlbumNumPlays);
+
+                break;
+
+            default:
+                printf("Opcão inválida.\n");
+                continue;
+        }
+
+        if (removed != NULL) {
+            free(removed);
+            return TRUE;
+        }
+
+        running = FALSE;
+    }
+
+    return FALSE;
+}
+
+int albumQuery(GCofo *gCofo) {
+    int option;
+    int running = TRUE;
+    Album key;
+    void *find;
+
+    while (running) {
+        key = (Album){0};
+        printf("#-------- Consultar Álbum --------#\n");
+        printf("| 1 - Por nome                    |\n");
+        printf("| 2 - Por número de músicas       |\n");
+        printf("| 3 - Por número de visualizações |\n");
+        printf("#---------------------------------#\n");
+        printf("> ");
+
+        if (scanf("%d", &option) != 1) {
+            printf("Entrada inválida.\n");
+            cleanBuffer();
+            continue;
+        }
+        cleanBuffer();
+
+
+        printf("\n");
+        switch(option) {
+            case 1:
+                printf("Digite o nome do álbum: ");
+                fgets(key.name, 30, stdin);
+                find = gCofoQuery(gCofo, (void *) &key, queryAlbumName);
+
+                break;
+
+            case 2:
+                printf("Digite o número de músicas: ");
+                scanf("%d", &key.numSongs);
+                cleanBuffer();
+                find = gCofoQuery(gCofo, &key, queryAlbumNumSongs);
+ 
+                break;
+
+            case 3:
+                printf("Digite o número de visualizações: ");
+                scanf("%f", &key.numPlays);
+                cleanBuffer();
+                find = gCofoQuery(gCofo, &key, queryAlbumNumPlays);
+
+                break;
+
+            default:
+                printf("Opcão inválida.\n");
+                continue;
+        }
+
+        if (find != NULL) {
+            return TRUE;
+        }
+
+        running = FALSE;
+    }
+
+    return FALSE;
 }
 
 int main() {
@@ -108,15 +235,60 @@ int main() {
             case 1:
                 Album *album = albumCreate();
                 if (album != NULL) {
-                    if(gCofoInsert(gCofo, album)) {
+                    if(gCofoInsert(gCofo, (void *) album)) {
                         printf("Álbum adicionado com sucesso!\n");
                     } else {
                         printf("Não foi possível adicionar o álbum à lista!\n");
+                        free(album);
                     }
                 } else {
-                    printf("Não foi possível adicionar o álbum à lista!\n");
-                    free(album);
+                    printf("Não foi possível adicionar o álbum, a lista está cheia!\n");
                 }
+                break;
+
+            case 2:
+                if (albumRemove(gCofo)) {
+                    printf("Álbum removido com sucesso!\n");
+                } else {
+                    printf("Álbum não encontrado!\n");
+                }
+                break;
+
+            case 3:
+                if (albumQuery(gCofo)) {
+                    printf("Álbum encontrado!\n");
+                } else {
+                    printf("Álbum não encontrado\n");
+                }
+
+                break;
+
+            case 4:
+                Album *first = (Album *) gCofoGetFirst(gCofo);
+                if (first != NULL) {
+                    printf("Nome: %sNúmero de músicas: %d\nNúmero de visualizações: %.1f\n", first->name, first->numSongs, first->numPlays);
+                } else {
+                    printf("Não há álbuns na lista!\n");
+                }
+                break;
+
+            case 5:
+                Album *next = (Album *) gCofoGetNext(gCofo);
+                if (next != NULL) {
+                    printf("Nome: %sNúmero de músicas: %d\nNúmero de visualizações: %.1f\n", next->name, next->numPlays, next->numSongs);
+                } else {
+                    printf("Não foi possível encontrar o próximo!\n");
+                }
+
+                break;
+
+            case 6:
+                if (gCofoClear(gCofo)) {
+                    printf("Lista de álbums esvaziada!\n");
+                } else {
+                    printf("A lista já está vazia!\n");
+                }
+
                 break;
 
             case 7:
@@ -125,8 +297,14 @@ int main() {
                     gCofo == NULL;
                     running = FALSE;
                 } else {
-                    printf("Não foi possível destruir a lista!\n");
+                    printf("Não foi possível destruir a lista, a lista não está vazia!\n");
                 }
+ 
+                break;
+
+            default:
+                printf("Opcão inválida!");
+                continue;
         }
     }
 
