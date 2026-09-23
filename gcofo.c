@@ -125,4 +125,3 @@ int gCofoDestroy(GCofo *gCofo) {
 
     return FALSE;
 }
-
