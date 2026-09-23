@@ -16,7 +16,7 @@ GCofo *gCofoCreate(int maxItems) {
             if (gc->list != NULL) {
                 gc->numItems = 0;
                 gc->maxItems = maxItems;
-                gc->current = -1;
+                gc->current = 0;
 
                 return gc;
             }
@@ -41,52 +41,61 @@ int gCofoInsert(GCofo *gCofo, void *item) {
     return FALSE;
 }
 
-int gCofoRemove(GCofo *gCofo, void *key, int (*cmp)(void *, void *)) {
+void *gCofoRemove(GCofo *gCofo, void *key, int (*cmp)(void *, void *)) {
     if (gCofo != NULL) {
         if (gCofo->numItems > 0) {
-            int i;
-            int isEqual = FALSE;
-
-            for (i = 0; i < gCofo->numItems; i++) {
+            for (int i = 0; i < gCofo->numItems; i++) {
                 if (cmp(key, gCofo->list[i])) {
-                    isEqual = TRUE;
-                    break;
+                    void *removed = gCofo->list[i];
+                    for (int j = i; j < gCofo->numItems -1; j++) {
+                        gCofo->list[j] = gCofo->list[j + 1];
+                    }
+
+                    gCofo->numItems--;
+
+                    return removed;
                 }
-            }
-
-            if (isEqual) {
-                for (int j = i; j < gCofo->numItems - 1; j++) {
-                    gCofo->list[j] = gCofo->list[j + 1];
-                }
-
-                gCofo->numItems--;
-
-                return TRUE;
             }
         }
     }
 
-    return FALSE;
+    return NULL;
 }
 
-int gCofoQuery(GCofo *gCofo, void *key, int (*cmp)(void *, void *)) {
+void *gCofoQuery(GCofo *gCofo, void *key, int (*cmp)(void *, void *)) {
     if (gCofo != NULL) {
         if (gCofo->numItems > 0) {
-            int i = 0;
-            int isEqual = FALSE;
-
-            for (i = 0; i < gCofo->numItems; i++) {
+            for (int i = 0; i < gCofo->numItems; i++) {
                 if (cmp(key, gCofo->list[i])) {
-                    isEqual = TRUE;
-                    break;
+                    return gCofo->list[i];
                 }
-            }
-
-            if (isEqual) {
-                return TRUE;
             }
         }
     }
 
-    return FALSE;
+    return NULL;
+}
+
+void *gCofoGetNext(GCofo *gCofo) {
+    if (gCofo != NULL) {
+        if (gCofo->numItems > 0 && gCofo->current < gCofo->numItems - 1) {
+            gCofo->current++;
+
+            return gCofo->list[gCofo->current];
+        }
+    }
+
+    return NULL;
+}
+
+void *gCofoGetFirst(GCofo *gCofo) {
+    if (gCofo != NULL) {
+        if (gCofo->numItems > 0) {
+            gCofo->current = 0;
+
+            return gCofo->list[gCofo->current];
+        }
+    }
+
+    return NULL;
 }

@@ -7,8 +7,9 @@ typedef struct GCofo GCofo;
 
 GCofo *gCofoCreate(int maxItens);
 int gCofoInsert(GCofo *gCofo, void *item);
-int gCofoRemove(GCofo *gCofo, void *key, int (*cmp)(void *, void *));
-int gCofoQuery(GCofo *gCofo, void *key, int (*cmp)(void *, void *));
-
+void *gCofoRemove(GCofo *gCofo, void *key, int (*cmp)(void *, void *));
+void *gCofoQuery(GCofo *gCofo, void *key, int (*cmp)(void *, void *));
+void *gCofoGetNext(GCofo *gCofo);
+void *gCofoGetFirst(GCofo *gCofo);
 
 #endif
